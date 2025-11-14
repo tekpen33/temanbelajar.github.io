@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pertemuan Pertama - Quiz 1</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 200px;
+      background-color: #4e6b82;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .sidebar h2 {
+      padding: 25px 20px;
+      font-size: 22px;
+      font-weight: bold;
+      background-color: #4e6b82;
+      border-bottom: 1px solid #3d5568;
+      text-align: left;
+      cursor: default; /* tidak interaktif */
+      color: white;
+      transition: none; /* tidak berubah saat hover */
+    }
+
+    /* Hilangkan efek hover di judul sidebar */
+    .sidebar h2:hover {
+      color: white;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: white;
+      padding: 15px 20px;
+      background-color: #3d5568;
+      border-bottom: 1px solid #2e3f4d;
+      transition: background-color 0.3s;
+    }
+
+    .menu a:hover {
+      background-color: #2f4557;
+    }
+
+    .logout {
+      background-color: #3d3d3d;
+      padding: 15px 20px;
+      text-align: left;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .logout:hover {
+      background-color: #2f2f2f;
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #f4f4f4;
+      margin-left: 200px; /* agar konten tidak menimpa sidebar */
+    }
+
+    /* Header */
+    .header {
+      background-color: #739bb2;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 15px 30px;
+    }
+
+    .header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ccc;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .header span {
+      font-size: 16px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .header img:hover,
+    .header span:hover {
+      opacity: 0.8;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 30px 50px;
+      overflow-y: auto;
+      background-color: #ffffff;
+      margin: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 25px;
+      background: #e6e6e6;
+      padding: 10px 15px;
+      border-radius: 4px;
+    }
+
+
+    p {
+      line-height: 1.7;
+      color: #333;
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    ul {
+      margin-left: 20px;
+      color: #333;
+      line-height: 1.7;
+    }
+
+    li { margin-bottom: 8px; }
+
+    a.link-quiz {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
+      color: #3366cc;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    a.link-quiz:hover {
+      color: #1a3f8a;
+      text-decoration: underline;
+    }
+
+    ol {
+      margin-left: 30px;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    li {
+      margin-bottom: 20px;
+    }
+
+    input[type="radio"] {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    /* Popup style */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px 40px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  font-size: 18px;
+  color: #333;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+<style>
+  /* 🔹 Gaya breadcrumb tetap seperti desain lama */
+  .breadcrumb {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+    background: #e6e6e6;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+
+  /* 🔹 Tambahkan efek pointer tanpa ubah desain */
+  .breadcrumb .link {
+    cursor: pointer;
+    color: inherit; /* tetap warna asli */
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  /* 🔹 Efek hover halus */
+  .breadcrumb .link:hover {
+    color: #2f4557; /* sedikit lebih gelap saat diarahkan */
+  }
+
+  /* ==================== 🔹 RESPONSIVE DESIGN UNTUK HP 🔹 ==================== */
+@media (max-width: 768px) {
+
+  body {
+    flex-direction: column;
+    height: auto;
+  }
+
+  /* Sidebar berubah menjadi navbar di atas */
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .sidebar h2 {
+    font-size: 18px;
+    padding: 10px 0;
+    border-bottom: none;
+  }
+
+  .menu {
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .menu a {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    font-size: 14px;
+  }
+
+  .menu a:hover {
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 4px;
+  }
+
+  .logout {
+    display: none;
+  }
+
+  /* Header pengguna */
+  .header {
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    background-color: #739bb2;
+  }
+
+  .header img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 8px;
+  }
+
+  .header span {
+    font-size: 15px;
+    color: white;
+    font-weight: bold;
+  }
+
+  /* Konten */
+  .main-content {
+    margin-left: 0;
+  }
+
+  .content {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .content h2 {
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .breadcrumb {
+    font-size: 13px;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  ul li {
+    font-size: 14px;
+  }
+
+  a.link-quiz {
+    display: block;
+    text-align: center;
+    font-size: 15px;
+    margin-top: 20px;
+  }
+}
+
+/* 📱 Extra Small (HP kecil: 480px ke bawah) */
+@media (max-width: 480px) {
+
+  .menu a {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .header img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .header span {
+    font-size: 14px;
+  }
+
+  .content {
+    margin: 15px;
+    padding: 15px;
+  }
+
+  .content h2 {
+    font-size: 18px;
+  }
+
+  p, ul li {
+    font-size: 13px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div>
+      <h2>Teman Belajar</h2>
+      <div class="menu">
+        <a href="pagehome.html">Home</a>
+        <a href="pembelajaran.html">Aktivitas</a>
+        <a href="#">Nilai</a>
+      </div>
+    </div>
+    <div class="logout" onclick="window.location.href='pagesignin.html'">Log Out</div>
+  </div>
+
+  
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header">
+      <img src="assets/homepage/ORANG.png" alt="User">
+      <span>Fadhil Sirojul Masruro</span>
+    </div>
+
+    <div class="content">
+      <div class="breadcrumb">
+        <span class="link" onclick="window.location.href='pageAI.html'">Aktivitas</span> /
+        <span class="link" onclick="window.location.href='pembelajaran.html'">Quiz 1</span> /
+        <span class="link" onclick="window.location.href='lesson1.html'">Pertemuan Pertama</span>
+      </div>
+
+      <h2>Kerjakan Soal di Bawah Ini!!</h2>
+
+      <ul>
+        <ol>
+            <li>Apa tujuan utama pembelajaran pada bagian pertama video pembelajaran AI?
+            <br>
+            <input type="radio" name="soal1" value="A"> A. Mengenal jenis-jenis robot industri<br>
+            <input type="radio" name="soal1" value="B"> B. Mengenal dan membedakan jenis-jenis AI berdasarkan kemampuan dan fungsinya<br>
+            <input type="radio" name="soal1" value="C"> C. Membuat program AI sederhana<br>
+            <input type="radio" name="soal1" value="D"> D. Mengetahui sejarah perkembangan komputer<br>
+            </li>
+
+            <li>Contoh penerapan Narrow AI dalam kehidupan sehari-hari adalah....
+            <br>
+            <input type="radio" name="soal2" value="A"> A. Jarvis dalam Film Iron Man<br>
+            <input type="radio" name="soal2" value="B"> B. Samantha dalam Film Her<br>
+            <input type="radio" name="soal2" value="C"> C. Google Assistant dan Youtuber Recommendation<br>
+            <input type="radio" name="soal2" value="D"> D. AI yang Bisa Membuat Keputusan Sendiri<br>
+            </li>
+
+            <li>General AI memiliki kemampuan untuk....
+            <br>
+            <input type="radio" name="soal3" value="A"> A. Melakukan Satu Tugas Spesifik Saja<br>
+            <input type="radio" name="soal3" value="B"> B. Meniru Kecerdasan Manusia Sepenuhnya<br>
+            <input type="radio" name="soal3" value="C"> C. Membaca Pikiran Manusia<br>
+            <input type="radio" name="soal3" value="D"> D. Memberikan Rekomendasi Lagu Spotify<br>
+            </li>
+
+            <li>Mengapa Superintelligence belum ada di dunia nyata?
+            <br>
+            <input type="radio" name="soal4" value="A"> A. Karena terlalu mahal untuk dikembangkan<br>
+            <input type="radio" name="soal4" value="B"> B. Karena AI tidak bisa berpikir logis<br>
+            <input type="radio" name="soal4" value="C"> C. Karena teknologi tersebut masih dalam tahap penelitian dan simulasi<br>
+            <input type="radio" name="soal4" value="D"> D. Karena tidak dibutuhkan manusia<br>
+            </li>
+
+            <li>Contoh Superintelligence yang disebutkan dalam vidio dan website adalah …..
+            <br>
+            <input type="radio" name="soal5" value="A"> A. Siri<br>
+            <input type="radio" name="soal5" value="B"> B. Jarvis<br>
+            <input type="radio" name="soal5" value="C"> C. Samantha<br>
+            <input type="radio" name="soal5" value="D"> D. Google Maps<br>
+            </li>
+
+            <li>ChatGPT termasuk ke dalam jenis AI ....
+            <br>
+            <input type="radio" name="soal6" value="A"> A. Lemah (Narrow AI)<br>
+            <input type="radio" name="soal6" value="B"> B. Kuat (General AI)<br>
+            <input type="radio" name="soal6" value="C"> C. Superintelligence<br>
+            <input type="radio" name="soal6" value="D"> D. Hybrid AI<br>
+            </li>
+        </ol>
+
+      <!-- Tombol kirim -->
+      <a href="#" class="link-quiz" onclick="showPopup()">Kirim Jawaban Anda</a>
+
+      <!-- Notifikasi -->
+      <div id="popup" class="popup">
+        <div class="popup-content">
+        <p>✅ Jawaban Anda telah terkirim!</p>
+      </div>
+  <script>
+        function showPopup() {
+        const popup = document.getElementById('popup');
+        popup.style.display = 'flex';
+        setTimeout(() => {
+        popup.style.display = 'none';
+        }, 2000); // popup hilang otomatis setelah 2 detik
+    }
+</script>
+</body>
+</html>
