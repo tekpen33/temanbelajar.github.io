@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pertemuan Ketiga - Peran AI di Kehidupan</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 200px;
+      background-color: #4e6b82;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .sidebar h2 {
+      padding: 25px 20px;
+      font-size: 22px;
+      font-weight: bold;
+      background-color: #4e6b82;
+      border-bottom: 1px solid #3d5568;
+      text-align: left;
+      cursor: default; /* tidak interaktif */
+      color: white;
+      transition: none; /* tidak berubah saat hover */
+    }
+
+    /* Hilangkan efek hover di judul sidebar */
+    .sidebar h2:hover {
+      color: white;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu a {
+      text-decoration: none;
+      color: white;
+      padding: 15px 20px;
+      background-color: #3d5568;
+      border-bottom: 1px solid #2e3f4d;
+      transition: background-color 0.3s;
+    }
+
+    .menu a:hover {
+      background-color: #2f4557;
+    }
+
+    .logout {
+      background-color: #3d3d3d;
+      padding: 15px 20px;
+      text-align: left;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .logout:hover {
+      background-color: #2f2f2f;
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background-color: #f4f4f4;
+      margin-left: 200px; /* agar konten tidak menimpa sidebar */
+    }
+
+    /* Header */
+    .header {
+      background-color: #739bb2;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 15px 30px;
+    }
+
+    .header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ccc;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .header span {
+      font-size: 16px;
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+
+    .header img:hover,
+    .header span:hover {
+      opacity: 0.8;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 30px 50px;
+      overflow-y: auto;
+      background-color: #ffffff;
+      margin: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 25px;
+      background: #e6e6e6;
+      padding: 10px 15px;
+      border-radius: 4px;
+    }
+
+
+    p {
+      line-height: 1.7;
+      color: #333;
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    ul {
+      margin-left: 20px;
+      color: #333;
+      line-height: 1.7;
+    }
+
+    li { margin-bottom: 8px; }
+
+    a.link-quiz {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
+      color: #3366cc;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    a.link-quiz:hover {
+      color: #1a3f8a;
+      text-decoration: underline;
+    }
+
+    <style>
+  /* 🔹 Gaya breadcrumb tetap seperti desain lama */
+  .breadcrumb {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+    background: #e6e6e6;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+
+  /* 🔹 Tambahkan efek pointer tanpa ubah desain */
+  .breadcrumb .link {
+    cursor: pointer;
+    color: inherit; /* tetap warna asli */
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  /* 🔹 Efek hover halus */
+  .breadcrumb .link:hover {
+    color: #2f4557; /* sedikit lebih gelap saat diarahkan */
+  }
+
+  /* ==================== 🔹 RESPONSIVE DESIGN UNTUK HP 🔹 ==================== */
+@media (max-width: 768px) {
+
+  body {
+    flex-direction: column;
+    height: auto;
+  }
+
+  /* Sidebar berubah menjadi navbar di atas */
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .sidebar h2 {
+    font-size: 18px;
+    padding: 10px 0;
+    border-bottom: none;
+  }
+
+  .menu {
+    flex-direction: row;
+    gap: 15px;
+  }
+
+  .menu a {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    color: white;
+    font-size: 14px;
+  }
+
+  .menu a:hover {
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 4px;
+  }
+
+  .logout {
+    display: none;
+  }
+
+  /* Header pengguna */
+  .header {
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    background-color: #739bb2;
+  }
+
+  .header img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 8px;
+  }
+
+  .header span {
+    font-size: 15px;
+    color: white;
+    font-weight: bold;
+  }
+
+  /* Konten */
+  .main-content {
+    margin-left: 0;
+  }
+
+  .content {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .content h2 {
+    text-align: center;
+    font-size: 20px;
+  }
+
+  .breadcrumb {
+    font-size: 13px;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  ul li {
+    font-size: 14px;
+  }
+
+  a.link-quiz {
+    display: block;
+    text-align: center;
+    font-size: 15px;
+    margin-top: 20px;
+  }
+}
+
+/* 📱 Extra Small (HP kecil: 480px ke bawah) */
+@media (max-width: 480px) {
+
+  .menu a {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .header img {
+    width: 55px;
+    height: 55px;
+  }
+
+  .header span {
+    font-size: 14px;
+  }
+
+  .content {
+    margin: 15px;
+    padding: 15px;
+  }
+
+  .content h2 {
+    font-size: 18px;
+  }
+
+  p, ul li {
+    font-size: 13px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div>
+      <h2>Teman Belajar</h2>
+      <div class="menu">
+        <a href="pagehome.html">Home</a>
+        <a href="pembelajaran.html">Aktivitas</a>
+        <a href="menunilai.html">Nilai</a>
+      </div>
+    </div>
+    <div class="logout" onclick="window.location.href='pagesignin.html'">Log Out</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header">
+      <img src="assets/homepage/ORANG.png" alt="User">
+      <span>Fadhil Sirojul Masruro</span>
+    </div>
+
+    <div class="content">
+      <div class="breadcrumb">
+        <span class="link" onclick="window.location.href='pembelajaran.html'">Aktivitas</span> /
+        <span class="link" onclick="window.location.href='pageAI.html'">Peran AI di Kehidupan</span> /
+        <span class="link" onclick="window.location.href='lesson3'">Pertemuan Ketiga</span>
+      </div>
+
+      <h2>Peran AI dalam Kehidupan</h2>
+
+      <p>
+        Sekarang, AI sudah menjadi bagian dari kehidupan kita. Coba perhatikan aktivitas sehari-hari kita  tanpa sadar, 
+        kita sering berinteraksi dengan teknologi berbasis kecerdasan buatan. Misalnya, saat kamu membuka Spotify, AI menganalisis 
+        lagu yang sering kamu dengar, lalu merekomendasikan musik yang sesuai dengan seleramu. Di kamera smartphone, AI membantu 
+        mendeteksi wajah, memperbaiki pencahayaan, bahkan bisa menghapus objek yang mengganggu secara otomatis. Dan ketika kita 
+        menggunakan Google Maps, AI memproses jutaan data lalu lintas secara real-time untuk memberi tahu rute tercepat. Semua 
+        itu contoh nyata bagaimana AI mempermudah hidup kita.
+      </p>
+
+      <p>Ke depannya, peran AI akan semakin besar dan meluas di berbagai bidang. Dalam pendidikan, misalnya, AI bisa membantu guru 
+         menyesuaikan pembelajaran sesuai kemampuan setiap siswa — seperti tutor pribadi yang sabar dan tidak pernah lelah. Di bidang kesehatan, 
+         AI mampu mendeteksi penyakit lebih cepat melalui analisis citra medis, sehingga dokter bisa memberikan penanganan lebih dini. Bahkan 
+         dalam lingkungan, AI digunakan untuk memantau perubahan iklim, mengelola energi, dan mengurangi limbah. Artinya, kecerdasan buatan 
+         bukan hanya membuat hidup lebih mudah, tapi juga membantu manusia menghadapi tantangan global
+      </p>
+
+      <p>Tapi tentu saja, semakin canggih teknologinya, semakin besar juga tanggung jawab kita dalam menggunakannya. AI tidak akan bijak jika 
+         manusianya tidak bijak. Maka, penting bagi kita untuk memahami etikanya  seperti menjaga privasi, tidak menyebarkan informasi palsu, dan 
+         menggunakan AI untuk hal-hal positif. Dengan begitu, AI benar-benar menjadi alat bantu, bukan ancaman
+      </p>
+
+      <p>Jadi, itulah ragam AI  dari asisten virtual seperti Siri atau Google Assistant, hingga sistem super cerdas yang bisa membuat keputusan kompleks 
+         secara mandiri. Dengan belajar dan memahami AI sejak dini, kamu sedang menyiapkan diri menjadi generasi digital yang kreatif, cerdas, dan beretika. 
+         Karena masa depan teknologi bukan hanya soal seberapa pintar mesin bekerja, tapi seberapa bijak manusia mengendalikannya.
+      <p/>
+
+      <a href="quiz3.html" class="link-quiz">klik untuk mengakses sesi quiz</a>
+    </div>
+  </div>
+</body>
+</html>
