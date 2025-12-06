@@ -3,37 +3,52 @@
 // -------------------------
 let materiDibaca = localStorage.getItem("lesson1_materi") === "true";
 let videoSelesai = localStorage.getItem("lesson1_video") === "true";
+let lessonDone = localStorage.getItem("lesson1_done") === "true";
 
-// Button quiz
 const quizButton = document.querySelector(".link-quiz");
+const btnSelesai = document.getElementById("btnSelesai");
 
-// Atur tombol quiz berdasarkan progress
+// Atur tombol quiz
 function updateQuizButton() {
-  if (materiDibaca && videoSelesai) {
-    quizButton.style.pointerEvents = "auto";
-    quizButton.style.opacity = "1";
-    quizButton.innerText = "Mulai Quiz →";
-  } else {
-    quizButton.style.pointerEvents = "none";
-    quizButton.style.opacity = "0.5";
-    quizButton.innerText = "Selesaikan Materi & Video untuk Mulai Quiz";
-  }
+    if (materiDibaca && videoSelesai) {
+        quizButton.style.pointerEvents = "auto";
+        quizButton.style.opacity = "1";
+        quizButton.innerText = "Mulai Quiz →";
+    } else {
+        quizButton.style.pointerEvents = "none";
+        quizButton.style.opacity = "0.5";
+        quizButton.innerText = "Selesaikan Materi & Video untuk Mulai Quiz";
+    }
+}
+
+// Atur tombol selesai
+function updateFinishButton() {
+    if (!btnSelesai) return;
+
+    if (lessonDone) {
+        btnSelesai.disabled = true;
+        btnSelesai.innerText = "Pertemuan Telah Ditandai";
+    } else {
+        btnSelesai.disabled = false;
+        btnSelesai.innerText = "Selesai & Tandai Pertemuan";
+    }
 }
 
 updateQuizButton();
+updateFinishButton();
 
 // -------------------------
 // 2. DETEKSI SCROLL SAMPAI BAWAH
 // -------------------------
 window.addEventListener("scroll", () => {
-  const contentHeight = document.body.scrollHeight;
-  const scrollPos = window.innerHeight + window.scrollY;
+    const contentHeight = document.body.scrollHeight;
+    const scrollPos = window.innerHeight + window.scrollY;
 
-  if (scrollPos >= contentHeight - 20) {
-    materiDibaca = true;
-    localStorage.setItem("lesson1_materi", "true");
-    updateQuizButton();
-  }
+    if (scrollPos >= contentHeight - 20) {
+        materiDibaca = true;
+        localStorage.setItem("lesson1_materi", "true");
+        updateQuizButton();
+    }
 });
 
 // -------------------------
@@ -42,72 +57,53 @@ window.addEventListener("scroll", () => {
 let player;
 
 function onYouTubeIframeAPIReady() {
-  player = new YT.Player("videoAI", {
-    events: {
-      onStateChange: function (event) {
-        if (event.data === YT.PlayerState.ENDED) {
-          videoSelesai = true;
-          localStorage.setItem("lesson1_video", "true");
-          updateQuizButton();
+    player = new YT.Player("videoAI", {
+        events: {
+            onStateChange: function (event) {
+                if (event.data === YT.PlayerState.ENDED) {
+                    videoSelesai = true;
+                    localStorage.setItem("lesson1_video", "true");
+                    updateQuizButton();
+                }
+            }
         }
-      }
-    }
-  });
+    });
 }
-// Ketika tombol selesai ditekan → simpan progress
-const btnSelesai = document.getElementById("btnSelesai");
 
-btnSelesai.addEventListener("click", function () {
-    localStorage.setItem("lesson1_done", "true");
-    alert("Pertemuan 1 telah ditandai selesai!");
-});
-// ===============================
-// PANEL DEV - Shortcut Rahasia
-// ===============================
+// -------------------------
+// 4. TOMBOL SELESAI
+// -------------------------
+if (btnSelesai) {
+    btnSelesai.addEventListener("click", function () {
+        lessonDone = true;
+        localStorage.setItem("lesson1_done", "true");
+        updateFinishButton();
+        alert("Pertemuan 1 telah ditandai selesai!");
+    });
+}
 
-// Tekan CTRL + ALT + D untuk membuka panel developer
+// -------------------------
+// 5. PANEL DEV (RESET)
+// -------------------------
 document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.altKey && e.key === 'd') {
         const panel = document.getElementById("devPanel");
-        panel.style.display = panel.style.display === "none" ? "block" : "none";
+        if (panel) {
+            panel.style.display = panel.style.display === "none" ? "block" : "none";
+        }
     }
 });
 
-// Action tombol reset progres
 document.addEventListener("DOMContentLoaded", function() {
     const btnReset = document.getElementById("btnResetDev");
 
     if (btnReset) {
         btnReset.addEventListener("click", function() {
             if (confirm("Yakin reset semua progres siswa?")) {
-                // hapus semua progres
-                localStorage.removeItem("lesson1_done");
-                localStorage.removeItem("lesson2_done");
-                localStorage.removeItem("lesson3_done");
-
+                localStorage.clear();
                 alert("Progress berhasil direset!");
                 location.reload();
             }
         });
     }
 });
-localStorage.removeItem("lesson1_done");
-document.getElementById("btnResetDev").addEventListener("click", function() {
-    localStorage.clear(); // reset semua progress
-    location.reload();    // refresh halaman agar tombol kembali normal
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const lessonDone = localStorage.getItem("lesson1_done");
-
-    const finishBtn = document.getElementById("btnFinish");
-    
-    if (lessonDone) {
-        finishBtn.disabled = true;
-        finishBtn.innerText = "Pertemuan Telah Ditandai";
-    } else {
-        finishBtn.disabled = false;
-        finishBtn.innerText = "Selesai & Tandai Pertemuan";
-    }
-});
-
