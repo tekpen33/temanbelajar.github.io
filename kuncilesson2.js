@@ -43,7 +43,7 @@ window.addEventListener("scroll", () => {
 let player;
 
 function onYouTubeIframeAPIReady() {
-    player = new YT.Player("videoAI", {
+    player = new YT.Player("videoAI2", {
         events: {
             onStateChange: function (event) {
                 if (event.data === YT.PlayerState.ENDED) {
