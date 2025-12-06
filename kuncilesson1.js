@@ -91,6 +91,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+localStorage.removeItem("lesson1_done");
+document.getElementById("btnResetDev").addEventListener("click", function() {
+    localStorage.clear(); // reset semua progress
+    location.reload();    // refresh halaman agar tombol kembali normal
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     const lessonDone = localStorage.getItem("lesson1_done");
 
