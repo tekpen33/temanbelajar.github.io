@@ -38,21 +38,22 @@ window.addEventListener("scroll", () => {
 
 
 // -------------------------
-// DETEKSI VIDEO SELESAI
+// 3. DETEKSI VIDEO SELESAI
 // -------------------------
 let player;
+
 function onYouTubeIframeAPIReady() {
-  player = new YT.Player("videoAI", {
-    events: {
-      onStateChange: function(event) {
-        if (event.data === YT.PlayerState.ENDED) {
-          videoSelesai = true;
-          localStorage.setItem("lesson1_video", "true");
-          updateQuizButton();
+    player = new YT.Player("videoAI", {
+        events: {
+            onStateChange: function (event) {
+                if (event.data === YT.PlayerState.ENDED) {
+                    videoSelesai = true;
+                    localStorage.setItem("lesson2_video", "true");
+                    updateQuizButton();
+                }
+            }
         }
-      }
-    }
-  });
+    });
 }
 
 
