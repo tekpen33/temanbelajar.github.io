@@ -91,3 +91,17 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+document.addEventListener("DOMContentLoaded", function () {
+    const lessonDone = localStorage.getItem("lesson1_done");
+
+    const finishBtn = document.getElementById("btnFinish");
+    
+    if (lessonDone) {
+        finishBtn.disabled = true;
+        finishBtn.innerText = "Pertemuan Telah Ditandai";
+    } else {
+        finishBtn.disabled = false;
+        finishBtn.innerText = "Selesai & Tandai Pertemuan";
+    }
+});
+
