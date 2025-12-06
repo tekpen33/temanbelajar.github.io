@@ -262,3 +262,15 @@ body {
   opacity: 0.5;
   pointer-events: none;
 }
+/* Developer Hidden Panel */
+.dev-panel {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+}
