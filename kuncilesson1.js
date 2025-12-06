@@ -61,30 +61,33 @@ btnSelesai.addEventListener("click", function () {
     localStorage.setItem("lesson1_done", "true");
     alert("Pertemuan 1 telah ditandai selesai!");
 });
-// === OPEN DEVELOPER PANEL (CTRL + ALT + D) ===
+// ===============================
+// PANEL DEV - Shortcut Rahasia
+// ===============================
+
+// Tekan CTRL + ALT + D untuk membuka panel developer
 document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.altKey && e.key === 'd') {
         const panel = document.getElementById("devPanel");
-        panel.style.display = (panel.style.display === "none") ? "block" : "none";
+        panel.style.display = panel.style.display === "none" ? "block" : "none";
     }
 });
 
-// === RESET PROGRESS BUTTON ===
+// Action tombol reset progres
 document.addEventListener("DOMContentLoaded", function() {
     const btnReset = document.getElementById("btnResetDev");
 
     if (btnReset) {
         btnReset.addEventListener("click", function() {
-            if (confirm("Reset semua progres siswa?")) {
-
+            if (confirm("Yakin reset semua progres siswa?")) {
+                // hapus semua progres
                 localStorage.removeItem("lesson1_done");
                 localStorage.removeItem("lesson2_done");
                 localStorage.removeItem("lesson3_done");
 
-                alert("Progres berhasil direset!");
+                alert("Progress berhasil direset!");
                 location.reload();
             }
         });
     }
 });
-
