@@ -1,14 +1,16 @@
-// -------------------------------------
-// 1. CEK STATUS PROGRES
-// -------------------------------------
-let materiDibaca = localStorage.getItem("lesson2_materi") === "true";
-let videoSelesai = localStorage.getItem("lesson2_video") === "true";
-let lessonDone   = localStorage.getItem("lesson2_done") === "true";
+// =====================================
+// 1. AMBIL STATUS PROGRES
+// =====================================
+let materiDibaca = localStorage.getItem("lesson1_materi") === "true";
+let videoSelesai = localStorage.getItem("lesson1_video") === "true";
+let lessonDone = localStorage.getItem("lesson1_done") === "true";
 
 const quizButton = document.querySelector(".link-quiz");
 const btnSelesai = document.getElementById("btnSelesai");
 
-// Update akses button quiz
+// =====================================
+// 2. ATUR TOMBOL QUIZ
+// =====================================
 function updateQuizButton() {
     if (materiDibaca && videoSelesai) {
         quizButton.style.pointerEvents = "auto";
@@ -21,7 +23,9 @@ function updateQuizButton() {
     }
 }
 
-// Update tombol selesai
+// =====================================
+// 3. ATUR TOMBOL SELESAI
+// =====================================
 function updateFinishButton() {
     if (!btnSelesai) return;
 
@@ -37,34 +41,32 @@ function updateFinishButton() {
 updateQuizButton();
 updateFinishButton();
 
-
-// -------------------------------------
-// 2. DETEKSI SCROLL (Materi Dibaca)
-// -------------------------------------
+// =====================================
+// 4. DETEKSI SCROLL (Materi Dibaca)
+// =====================================
 window.addEventListener("scroll", () => {
     const contentHeight = document.body.scrollHeight;
-    const scrollPos     = window.innerHeight + window.scrollY;
+    const scrollPos = window.innerHeight + window.scrollY;
 
     if (scrollPos >= contentHeight - 20) {
         materiDibaca = true;
-        localStorage.setItem("lesson2_materi", "true");
+        localStorage.setItem("lesson1_materi", "true");
         updateQuizButton();
     }
 });
 
-
-// -------------------------------------
-// 3. DETEKSI VIDEO SELESAI (YouTube API)
-// -------------------------------------
+// =====================================
+// 5. DETEKSI VIDEO SELESAI (YouTube API)
+// =====================================
 let player;
 
 function onYouTubeIframeAPIReady() {
-    player = new YT.Player("videoAI3", {
+    player = new YT.Player("videoAI", {
         events: {
             onStateChange: function (event) {
                 if (event.data === YT.PlayerState.ENDED) {
                     videoSelesai = true;
-                    localStorage.setItem("lesson2_video", "true");
+                    localStorage.setItem("lesson1_video", "true");
                     updateQuizButton();
                 }
             }
@@ -72,25 +74,23 @@ function onYouTubeIframeAPIReady() {
     });
 }
 
-
-// -------------------------------------
-// 4. TOMBOL SELESAI
-// -------------------------------------
+// =====================================
+// 6. TOMBOL SELESAI
+// =====================================
 if (btnSelesai) {
     btnSelesai.addEventListener("click", function () {
         lessonDone = true;
-        localStorage.setItem("lesson2_done", "true");
+        localStorage.setItem("lesson1_done", "true");
         updateFinishButton();
-        alert("Pertemuan 2 telah ditandai selesai!");
+        alert("Pertemuan 1 telah ditandai selesai!");
     });
 }
 
-
-// -------------------------------------
-// 5. PANEL DEV (CTRL + ALT + D)
-// -------------------------------------
-document.addEventListener("keydown", function (e) {
-    if (e.ctrlKey && e.altKey && e.key === "d") {
+// =====================================
+// 7. DEVELOPER PANEL (CTRL+ALT+D)
+// =====================================
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.altKey && e.key === 'd') {
         const panel = document.getElementById("devPanel");
         if (panel) {
             panel.style.display = panel.style.display === "none" ? "block" : "none";
@@ -98,19 +98,16 @@ document.addEventListener("keydown", function (e) {
     }
 });
 
-
-// -------------------------------------
-// 6. RESET PROGRES (Panel Dev)
-// -------------------------------------
-document.addEventListener("DOMContentLoaded", function () {
+// =====================================
+// 8. TOMBOL RESET DEVELOPER
+// =====================================
+document.addEventListener("DOMContentLoaded", function() {
     const btnReset = document.getElementById("btnResetDev");
 
     if (btnReset) {
-        btnReset.addEventListener("click", function () {
-            if (confirm("Yakin reset seluruh progres?")) {
-                localStorage.removeItem("lesson2_materi");
-                localStorage.removeItem("lesson2_video");
-                localStorage.removeItem("lesson2_done");
+        btnReset.addEventListener("click", function() {
+            if (confirm("Yakin reset semua progres siswa?")) {
+                localStorage.clear();
                 alert("Progress berhasil direset!");
                 location.reload();
             }
