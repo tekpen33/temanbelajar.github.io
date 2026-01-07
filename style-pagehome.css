@@ -296,3 +296,23 @@ body {
 .container ul li {
   line-height: 1.6;
 }
+/* ================= PANDUAN SIMBOL ================= */
+.panduan-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.panduan-list > li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 20px;
+}
+
+.panduan-list > li::before {
+  content: "➤";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #4e6b82;
+  font-weight: bold;
+}
