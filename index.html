@@ -13,7 +13,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background-color: #7fa6b8; /* biru seperti gambar */
+      background-color: #7fa6b8;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -69,7 +69,6 @@
       color: #fff;
       font-size: 15px;
       cursor: pointer;
-      transition: background 0.3s;
     }
 
     button:hover {
@@ -98,116 +97,158 @@
     .hidden {
       display: none;
     }
+
+    /* ==== TOGGLE PASSWORD SIMPLE ==== */
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: #b0b0b0;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle-password:hover {
+      color: #fff;
+    }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Teman Belajar</h1>
+<div class="container">
+  <h1>Teman Belajar</h1>
 
-    <div class="card">
+  <div class="card">
 
-      <!-- LOGIN -->
-      <div id="loginBox">
-        <h2>Sign In</h2>
-        <input id="loginEmail" type="email" placeholder="Email">
+    <!-- LOGIN -->
+    <div id="loginBox">
+      <h2>Sign In</h2>
+      <input id="loginEmail" type="email" placeholder="Email">
+
+      <div class="password-wrapper">
         <input id="loginPassword" type="password" placeholder="Password">
-        <button onclick="login()">Sign In</button>
-
-        <div class="switch">
-          Belum punya akun? <span onclick="showRegister()">Daftar</span>
-        </div>  
+        <span class="toggle-password" onclick="togglePassword('loginPassword', this)">Show</span>
       </div>
 
-      <!-- REGISTER -->
-      <div id="registerBox" class="hidden">
-        <h2>Register</h2>
-        <input id="regEmail" type="email" placeholder="Email">
-        <input id="regPassword" type="password" placeholder="Password">
-        <input id="regNama" type="text" placeholder="Nama Lengkap">
-        <input id="regNisn" type="text" placeholder="NISN">
-        <button onclick="register()">Daftar</button>
+      <button onclick="login()">Sign In</button>
 
-        <div class="switch">
-          Sudah punya akun? <span onclick="showLogin()">Login</span>
-        </div>
+      <div class="switch">
+        Belum punya akun? <span onclick="showRegister()">Daftar</span>
       </div>
-
-      <p id="pesan"></p>
     </div>
+
+    <!-- REGISTER -->
+    <div id="registerBox" class="hidden">
+      <h2>Register</h2>
+      <input id="regEmail" type="email" placeholder="Email">
+
+      <div class="password-wrapper">
+        <input id="regPassword" type="password" placeholder="Password">
+        <span class="toggle-password" onclick="togglePassword('regPassword', this)">Show</span>
+      </div>
+
+      <input id="regNama" type="text" placeholder="Nama Lengkap">
+      <input id="regNisn" type="text" placeholder="NISN">
+
+      <button onclick="register()">Daftar</button>
+
+      <div class="switch">
+        Sudah punya akun? <span onclick="showLogin()">Login</span>
+      </div>
+    </div>
+
+    <p id="pesan"></p>
   </div>
+</div>
 
-  <!-- Firebase v8 SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<!-- FIREBASE v8 -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAcB4nf6LpWl4_lYdWjiSJhVPA_Zd619QI",
-      authDomain: "teman-belajar-476bf.firebaseapp.com",
-      projectId: "teman-belajar-476bf",
-      storageBucket: "teman-belajar-476bf.appspot.com",
-      messagingSenderId: "78220122476",
-      appId: "1:78220122476:web:318a5afc32de2dcc6a3b49"
-    };
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAcB4nf6LpWl4_lYdWjiSJhVPA_Zd619QI",
+    authDomain: "teman-belajar-476bf.firebaseapp.com",
+    projectId: "teman-belajar-476bf",
+    storageBucket: "teman-belajar-476bf.appspot.com",
+    messagingSenderId: "78220122476",
+    appId: "1:78220122476:web:318a5afc32de2dcc6a3b49"
+  };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-    function showRegister() {
-      document.getElementById("loginBox").classList.add("hidden");
-      document.getElementById("registerBox").classList.remove("hidden");
-      document.getElementById("pesan").innerText = "";
+  function showRegister() {
+    loginBox.classList.add("hidden");
+    registerBox.classList.remove("hidden");
+    pesan.innerText = "";
+  }
+
+  function showLogin() {
+    registerBox.classList.add("hidden");
+    loginBox.classList.remove("hidden");
+    pesan.innerText = "";
+  }
+
+  function togglePassword(id, el) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+      input.type = "text";
+      el.innerText = "Hide";
+    } else {
+      input.type = "password";
+      el.innerText = "Show";
+    }
+  }
+
+  function register() {
+    const email = regEmail.value;
+    const password = regPassword.value;
+    const nama = regNama.value;
+    const nisn = regNisn.value;
+
+    if (!email || !password || !nama || !nisn) {
+      alert("Semua field wajib diisi");
+      return;
     }
 
-    function showLogin() {
-      document.getElementById("registerBox").classList.add("hidden");
-      document.getElementById("loginBox").classList.remove("hidden");
-      document.getElementById("pesan").innerText = "";
-    }
-
-    function register() {
-      const email = regEmail.value;
-      const password = regPassword.value;
-      const nama = regNama.value;
-      const nisn = regNisn.value;
-
-      if (!email || !password || !nama || !nisn) {
-        alert("Semua field wajib diisi");
-        return;
-      }
-
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(res => {
-          return db.collection("users").doc(res.user.uid).set({
-            email,
-            namaLengkap: nama,
-            nisn,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-        })
-        .then(() => {
-          alert("Registrasi berhasil!");
-          showLogin();
-        })
-        .catch(err => alert(err.message));
-    }
-
-    function login() {
-      auth.signInWithEmailAndPassword(
-        loginEmail.value,
-        loginPassword.value
-      )
-      .then(() => {
-    window.location.href = "pagehome.html";
-        })
-        .catch(err => {
-            pesan.innerText = err.message;
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(res => {
+        return db.collection("users").doc(res.user.uid).set({
+          email,
+          namaLengkap: nama,
+          nisn,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        }
-  </script>
+      })
+      .then(() => {
+        alert("Registrasi berhasil!");
+        showLogin();
+      })
+      .catch(err => alert(err.message));
+  }
+
+  function login() {
+    auth.signInWithEmailAndPassword(
+      loginEmail.value,
+      loginPassword.value
+    )
+    .then(() => {
+      window.location.href = "pagehome.html";
+    })
+    .catch(err => {
+      pesan.innerText = err.message;
+    });
+  }
+</script>
 
 </body>
 </html>
