@@ -1,80 +1,134 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Evaluasi Akhir AI</title>
+<meta charset="UTF-8">
+<title>Evaluasi Akhir AI</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 30px;
-    }
-    .quiz-box {
-      max-width: 800px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    h2 { text-align: center; }
-    .question { margin-bottom: 20px; }
-    label { display: block; margin: 6px 0; cursor: pointer; }
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  padding: 30px;
+}
 
-    button {
-      margin-top: 20px;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #4e6b82;
-      color: white;
-      font-size: 15px;
-      cursor: pointer;
-    }
-    button:hover { background: #2f4557; }
+.quiz-box {
+  max-width: 800px;
+  margin: auto;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+}
 
-    .result {
-      margin-top: 25px;
-      padding: 15px;
-      border-radius: 8px;
-      display: none;
-      font-weight: bold;
-    }
-    .success { background: #dcfce7; color: #166534; }
-    .fail { background: #fee2e2; color: #991b1b; }
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+}
 
-    .nav-btn {
-      display: none;
-      margin-top: 15px;
-      background: #2563eb;
-    }
-  </style>
+/* INPUT STYLE (SEPERTI GAMBAR) */
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 15px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* SOAL */
+.question {
+  margin-bottom: 22px;
+}
+
+.question p {
+  font-weight: bold;
+}
+
+.question label {
+  display: block;
+  margin: 6px 0;
+  cursor: pointer;
+}
+
+/* BUTTON */
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #1e40af;
+}
+
+/* RESULT */
+.result {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 10px;
+  display: none;
+  font-weight: bold;
+}
+
+.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.fail {
+  background: #fee2e2;
+  color: #991b1b;
+}
+</style>
 </head>
+
 <body>
 
 <div class="quiz-box">
-  <h2>Evaluasi Akhir Materi AI</h2>
+<h2>Evaluasi Akhir Materi AI</h2>
 
-  <form id="quizForm"></form>
+<form id="quizForm">
 
-  <div id="result" class="result"></div>
+  <!-- DATA SISWA -->
+  <div class="form-group">
+    <label>Nama Lengkap</label>
+    <input type="text" id="nama" placeholder="Masukkan nama" required>
+  </div>
 
-  <button class="nav-btn" id="homeBtn">Kembali ke Home</button>
-  <button class="nav-btn" id="materiBtn">Kembali ke Materi</button>
+  <div class="form-group">
+    <label>NISN</label>
+    <input type="text" id="nisn" placeholder="Masukkan NISN" required>
+  </div>
+
+</form>
+
+<div id="result" class="result"></div>
+
 </div>
 
 <script type="module">
-/* ================= FIREBASE ================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore,
-  collection,
-  query,
-  where,
-  getDocs,
-  orderBy,
-  limit,
   doc,
   setDoc,
   getDoc,
@@ -83,6 +137,7 @@ import {
 import { getAuth, onAuthStateChanged }
 from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+/* FIREBASE CONFIG */
 const firebaseConfig = {
   apiKey: "AIzaSyAcB4nf6LpWl4_lYdWjiSJhVPA_Zd619QI",
   authDomain: "teman-belajar-476bf.firebaseapp.com",
@@ -96,142 +151,113 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-/* ================= DATA SOAL ================= */
+/* SOAL EVALUASI */
 const questions = [
-  { q: 'AI yang hanya bisa melakukan satu tugas disebut …', o: ['General AI','Narrow AI','Superintelligence','Hybrid AI'], a: 1 },
-  { q: 'Contoh penerapan Narrow AI adalah …', o: ['Jarvis','Samantha','Google Assistant','AI mandiri'], a: 2 },
-  { q: 'General AI mampu …', o: ['Satu tugas','Meniru manusia','Membaca pikiran','Rekomendasi'], a: 1 },
-  { q: 'Superintelligence saat ini …', o: ['Digunakan luas','Nyata','Masih fiksi','Tidak mungkin'], a: 2 },
-  { q: 'AI tanpa memori disebut …', o: ['Limited Memory','Theory of Mind','Reactive Machine','Self Aware'], a: 2 },
-  { q: 'Contoh Limited Memory adalah …', o: ['Kalkulator','Deep Blue','Mobil otonom','Jam'], a: 2 },
-  { q: 'AI yang memahami emosi disebut …', o: ['Narrow','Theory of Mind','Reactive','General'], a: 1 },
-  { q: 'AI Generatif mampu …', o: ['Hitung','Buat konten','Atur jadwal','Simpan data'], a: 1 },
-  { q: 'Contoh AI Generatif …', o: ['Maps','Excel','ChatGPT','Kalkulator'], a: 2 },
-  { q: 'Prompt Engineering adalah …', o: ['Bahasa','Cara memberi perintah AI','Merakit robot','Coding'], a: 1 }
+ { q:"AI yang hanya dapat melakukan satu tugas tertentu disebut …",
+   o:["General AI","Superintelligence","Narrow AI","Self-Awareness"], a:2 },
+
+ { q:"Contoh penerapan Narrow AI adalah …",
+   o:["Berpikir seperti manusia","Memahami emosi","Rekomendasi lagu Spotify","Menguasai semua bidang"], a:2 },
+
+ { q:"AI dengan kemampuan setara manusia disebut …",
+   o:["Narrow AI","Reactive Machine","General AI","Superintelligence"], a:2 },
+
+ { q:"Superintelligence adalah AI yang …",
+   o:["Digunakan sehari-hari","Satu tugas","Lebih pintar dari manusia","Tanpa memori"], a:2 },
+
+ { q:"AI tanpa memori disebut …",
+   o:["Limited Memory","Theory of Mind","Reactive Machines","Self-Awareness"], a:2 },
+
+ { q:"AI yang belajar dari pengalaman jangka pendek disebut …",
+   o:["Reactive Machines","Limited Memory","Superintelligence","General AI"], a:1 },
+
+ { q:"AI yang memahami emosi manusia disebut …",
+   o:["Narrow AI","Theory of Mind","Limited Memory","Self-Awareness"], a:1 },
+
+ { q:"Contoh AI generatif adalah …",
+   o:["Google Maps","Kamera HP","ChatGPT","Kalkulator"], a:2 },
+
+ { q:"Prompt Engineering adalah …",
+   o:["Memperbaiki mesin AI","Membuat robot","Memberi perintah tepat ke AI","Bahasa pemrograman"], a:2 },
+
+ { q:"Sikap bijak menggunakan AI adalah …",
+   o:["Menyebarkan hoaks","Mengandalkan AI sepenuhnya","Menggunakan secara bertanggung jawab","Membiarkan AI memutuskan semua"], a:2 }
 ];
 
-questions.sort(() => Math.random() - 0.5);
-
-/* ================= ELEMENT ================= */
 const form = document.getElementById("quizForm");
 const resultBox = document.getElementById("result");
-const homeBtn = document.getElementById("homeBtn");
-const materiBtn = document.getElementById("materiBtn");
 
-/* ================= RENDER SOAL ================= */
-questions.forEach((q, i) => {
-  let html = `<div class="question"><p>${i + 1}. ${q.q}</p>`;
-  q.o.forEach((opt, idx) => {
+/* RENDER SOAL */
+questions.forEach((q,i)=>{
+  let html = `<div class="question"><p>${i+1}. ${q.q}</p>`;
+  q.o.forEach((opt,idx)=>{
     html += `
-      <label>
-        <input type="radio" name="q${i}" value="${idx}"> ${opt}
-      </label>`;
+    <label>
+      <input type="radio" name="q${i}" value="${idx}"> ${opt}
+    </label>`;
   });
-  html += "</div>";
+  html += `</div>`;
   form.innerHTML += html;
 });
 
 form.innerHTML += `<button type="submit">Kirim Jawaban</button>`;
 
-/* ================= AMBIL PRESENSI ================= */
-async function ambilPresensi(email) {
-  const q = query(
-    collection(db, "presensi"),
-    where("email", "==", email),
-    orderBy("waktu", "desc"),
-    limit(1)
-  );
+/* AUTH CHECK */
+let currentUser = null;
+onAuthStateChanged(auth, user=>{
+  if(!user){
+    alert("Silakan login terlebih dahulu");
+    location.href="index.html";
+  }
+  currentUser = user;
+});
 
-  const snap = await getDocs(q);
-  if (snap.empty) return null;
+/* SUBMIT */
+form.addEventListener("submit", async(e)=>{
+  e.preventDefault();
 
-  console.log("DATA PRESENSI:", snap.docs[0].data());
-  return snap.docs[0].data();
-}
+  const nama = document.getElementById("nama").value.trim();
+  const nisn = document.getElementById("nisn").value.trim();
 
-/* ================= SIMPAN NILAI ================= */
-async function simpanNilai(nilai, presensi) {
-  const ref = doc(db, "nilai_evaluasi", presensi.nisn);
-
-  const cek = await getDoc(ref);
-  if (cek.exists()) {
-    alert("Anda sudah mengerjakan evaluasi akhir");
-    return false;
+  if(!nama || !nisn){
+    alert("Nama dan NISN wajib diisi");
+    return;
   }
 
-  await setDoc(ref, {
-    nama: presensi.nama,
-    nisn: presensi.nisn,
-    nilai: nilai,
-    statusLulus: nilai >= 75 ? "LULUS" : "TIDAK LULUS",
-    sumber: "presensi",
+  let score = 0;
+  for(let i=0;i<questions.length;i++){
+    const pilih = form.querySelector(`input[name="q${i}"]:checked`);
+    if(!pilih){
+      alert("Semua soal wajib dijawab");
+      return;
+    }
+    if(parseInt(pilih.value) === questions[i].a) score++;
+  }
+
+  const nilai = Math.round((score/questions.length)*100);
+  const ref = doc(db,"nilai_evaluasi",nisn);
+
+  const cek = await getDoc(ref);
+  if(cek.exists()){
+    alert("NISN ini sudah mengerjakan evaluasi");
+    return;
+  }
+
+  await setDoc(ref,{
+    nama,
+    nisn,
+    nilai,
+    statusLulus: nilai>=75 ? "LULUS":"TIDAK LULUS",
     createdAt: serverTimestamp()
   });
 
-  return true;
-}
-
-/* ================= AUTH CHECK ================= */
-let currentUser = null;
-
-onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    alert("Silakan login terlebih dahulu");
-    window.location.href = "index.html";
-    return;
-  }
-  currentUser = user;
-  console.log("Login sebagai:", user.email);
+  resultBox.style.display="block";
+  resultBox.className = nilai>=75 ? "result success":"result fail";
+  resultBox.innerHTML = nilai>=75
+    ? `✅ Selamat ${nama}, Anda LULUS dengan nilai ${nilai}`
+    : `❌ Nilai Anda ${nilai}. Silakan pelajari kembali materi.`;
 });
-
-/* ================= SUBMIT QUIZ ================= */
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  if (!currentUser) return;
-
-  let score = 0;
-  for (let i = 0; i < questions.length; i++) {
-    const pilih = form.querySelector(`input[name="q${i}"]:checked`);
-    if (!pilih) {
-      alert("Silakan jawab semua soal terlebih dahulu");
-      return;
-    }
-    if (parseInt(pilih.value) === questions[i].a) score++;
-  }
-
-  const nilai = Math.round((score / questions.length) * 100);
-
-  const presensi = await ambilPresensi(currentUser.email);
-  if (!presensi) {
-    alert("Data presensi tidak ditemukan");
-    return;
-  }
-
-  if (presensi.status.toLowerCase() !== "hadir") {
-    alert("Anda tidak tercatat hadir");
-    return;
-  }
-
-  const sukses = await simpanNilai(nilai, presensi);
-  if (!sukses) return;
-
-  resultBox.style.display = "block";
-
-  if (nilai >= 75) {
-    resultBox.className = "result success";
-    resultBox.innerHTML = `✅ Selamat! Nilai Anda ${nilai}. Anda lulus.`;
-    homeBtn.style.display = "inline-block";
-  } else {
-    resultBox.className = "result fail";
-    resultBox.innerHTML = `❌ Nilai Anda ${nilai}. Nilai di bawah kriteria, silakan pelajari Bab 2 lagi.`;
-    materiBtn.style.display = "inline-block";
-  }
-});
-
-/* ================= NAVIGASI ================= */
-homeBtn.onclick = () => window.location.href = "pagehome.html";
-materiBtn.onclick = () => window.location.href = "lesson1.html";
 </script>
+
 </body>
 </html>
